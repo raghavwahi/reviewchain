@@ -12,6 +12,7 @@ def product_details(name):
     details["id"] = str(uuid.uuid4())
     details["reviews"] = []
     details["rating"] = 0
+    details["sold_count"] = 0
 
     return details
 
@@ -24,4 +25,24 @@ products_list = [
 ]
 
 # Adding all the products to the data base
-products.insert_many([product_details(x) for x in products_list])
+def add_products():
+    products.insert_many([product_details(x) for x in products_list])
+
+# Fetches a products information based on the name
+def product_info(name):
+    return products.find_one({"name": name})
+
+# Get the product list
+def get_product_list():
+    return ''.join([x +': product(' + str(products_list.index(x) + 1) + ') \n' for x in products_list])
+
+# Get product name
+def get_product_name(number):
+    return products_list[number]
+
+# Update the sold count of the user
+def sold_count(name):
+    product_details = products.find_one({"name": name})
+    product_count = product_details["sold_count"]
+
+    products.update_one({"name":name}, { "$set": {"sold_count": product_count + 1}})

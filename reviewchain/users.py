@@ -14,10 +14,11 @@ def user_details(name, email_id):
     details["user_id"] = str(uuid.uuid4())
     details["purchase_history"] = []
     details["trust_score"] = 0
+    details["review_chain"] = []
 
     return details
 
-# Products list
+# Users list
 users_list = [
     ['Tommy Shelby', 'tomsmith@gmail.com'],
     ['Mike Ross', 'mikeross@gmail.com'],
@@ -31,4 +32,15 @@ users_list = [
     ['Michael Scott', 'mmichaelscott@gmail.com']
 ]
 
-users.insert_many([user_details(x[0], x[1]) for x in users_list])
+# Adding all the users to the data base
+def add_users():
+    users.insert_many([user_details(x[0], x[1]) for x in users_list])
+
+# update the purchase details of the user
+def update_purchase_detail(email, product):
+    user_details = users.find_one({"email_id": email})
+
+    purchase_history = user_details["purchase_history"]
+    purchase_history.append(product)
+
+    users.update_one({"email_id": email}, { "$set": { "purchase_history": purchase_history } })
