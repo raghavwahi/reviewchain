@@ -25,6 +25,3 @@ products_list = [
 
 # Adding all the products to the data base
 products.insert_many([product_details(x) for x in products_list])
-
-
-
