@@ -13,6 +13,7 @@ def product_details(name):
     details["reviews"] = []
     details["rating"] = 0
     details["sold_count"] = 0
+    details["users_purchased"] = []
 
     return details
 
@@ -33,7 +34,7 @@ def product_info(name):
     return products.find_one({"name": name})
 
 # Get the product list
-def get_product_list():
+def get_product_string():
     return ''.join([x +': product(' + str(products_list.index(x) + 1) + ') \n' for x in products_list])
 
 # Get product name
@@ -41,8 +42,17 @@ def get_product_name(number):
     return products_list[number]
 
 # Update the sold count of the user
-def sold_count(name):
-    product_details = products.find_one({"name": name})
+def sold_count(email, product_name):
+    product_details = products.find_one({"name": product_name})
     product_count = product_details["sold_count"]
+    users_purchased = product_details["users_purchased"]
+    
+    users_purchased.append(email)
 
-    products.update_one({"name":name}, { "$set": {"sold_count": product_count + 1}})
+    products.update_one({"name":product_name}, { "$set": {"sold_count": product_count + 1, "users_purchased": users_purchased}})
+
+    return products.find_one({"name": product_name})
+
+# return products list
+def get_product_list():
+    return products_list

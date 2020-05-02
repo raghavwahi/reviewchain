@@ -14,13 +14,13 @@ def user_details(name, email_id):
     details["user_id"] = str(uuid.uuid4())
     details["purchase_history"] = []
     details["trust_score"] = 0
-    details["review_chain"] = []
+    details["review_chain"] = {}
 
     return details
 
 # Users list
 users_list = [
-    ['Tommy Shelby', 'tomsmith@gmail.com'],
+    ['Tommy Shelby', 'tommyshelby@gmail.com'],
     ['Mike Ross', 'mikeross@gmail.com'],
     ['Saul Goodman', 'saulgoodman@gmail.com'],
     ['Walter White', 'walterwhite@gmail.com'],
@@ -44,3 +44,9 @@ def update_purchase_detail(email, product):
     purchase_history.append(product)
 
     users.update_one({"email_id": email}, { "$set": { "purchase_history": purchase_history } })
+
+    return users.find_one({"email_id": email})
+
+# Return users list
+def get_users_list():
+    return users_list

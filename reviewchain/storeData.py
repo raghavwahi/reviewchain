@@ -1,5 +1,4 @@
-import products
-import users
+import products, users
 
 def add_data():
     products.add_products()
